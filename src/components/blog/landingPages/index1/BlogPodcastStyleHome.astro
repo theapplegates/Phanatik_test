@@ -1,0 +1,272 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import readingTime from "reading-time";
+
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+import ChevronLeft from "@/components/fundations/icons/ChevronLeft.astro";
+import ChevronRight from "@/components/fundations/icons/ChevronRight.astro";
+import BlogCard5 from "@/components/blog/BlogCard5.astro";
+import AdvertAside from "@/components/advert/AdvertAside.astro";
+
+const allPosts = await getCollection("posts");
+allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate).getTime();
+  const dateB = new Date(b.data.pubDate).getTime();
+  return dateB - dateA;
+});
+
+const heroPosts = allPosts.filter((post) => post.data.isFeatured).slice(0, 6);
+const sliderPosts = heroPosts.length ? heroPosts : allPosts.slice(0, 6);
+const heroIds = new Set(sliderPosts.map((post) => post.id));
+const listPosts = allPosts.filter((post) => !heroIds.has(post.id)).slice(0, 8);
+const sidebarPosts = allPosts.filter((post) => post.data.isTopStory || post.data.isBreaking).slice(0, 5);
+const seriesPosts = sidebarPosts.length ? sidebarPosts : allPosts.slice(0, 5);
+
+const formatDate = (date) =>
+  new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  });
+
+const formatAuthorName = (slug = "") =>
+  slug
+    .replace(/-/g, " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+---
+
+<section class="overflow-x-hidden">
+  <Wrapper variant="standard" class="pt-12">
+    <div class="relative">
+      <div id="blog-hero-slider" class="keen-slider relative rounded-2xl overflow-hidden">
+        {
+          sliderPosts.map((post) => {
+            const url = "/blog/posts/" + post.id;
+            const title = post.data.title;
+            const description = post.data.description;
+            const image = post.data.image.url;
+            const tags = post.data.tags;
+            const pubDate = formatDate(post.data.pubDate);
+            const formattedAuthor = formatAuthorName(post.data.author);
+            const stats = readingTime(post.body);
+
+            return (
+              <article class="relative flex flex-col p-8 pt-40 lg:p-12 gap-8 w-full keen-slider__slide group rounded-2xl overflow-hidden">
+                <Image
+                  src={image}
+                  alt={post.data.image.alt || title}
+                  width={800}
+                  height={800}
+                  loading="eager"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover z-0"
+                />
+                <a href={url} title={title} class="absolute inset-0 z-30"> </a>
+                <div class="absolute inset-0 bg-linear-45 from-accent-950 via-accent-900/80 to-transparent z-10" />
+                <div class="relative flex flex-col h-full justify-between gap-2 z-20">
+                  <div>
+                    <Text tag="h3" variant="displaySM" class="gap-4 font-medium font-display text-white group-hover:underline text-balance">
+                      {title}
+                    </Text>
+                    <Text tag="p" variant="textBase" class="mt-2 tracking-tight text-base-300">
+                      {description}
+                    </Text>
+                  </div>
+                  <div class="flex flex-col gap-2 text-base-200 mt-2 relative before:absolute after:absolute before:bg-white after:bg-white/10 before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px pt-4">
+                    <div class="flex flex-wrap items-center gap-2 text-white">
+                      {tags.map((tag) => {
+                        const formattedTag = tag.replace(/-/g, " ");
+                        return (
+                          <Text tag="p" variant="textXS" title={tag} aria-label={tag} class="text-white capitalize font-medium">
+                            {formattedTag}
+                          </Text>
+                        );
+                      })}
+                      <span>·</span>
+                      <Text tag="p" variant="textXS" class="font-medium">{stats.text}</Text>
+                      <span>·</span>
+                      <Text tag="p" variant="textXS" class="font-medium">{formattedAuthor}</Text>
+                      <span>·</span>
+                      <Text tag="p" variant="textXS" class="font-medium">
+                        <time datetime={pubDate}>{pubDate}</time>
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+      <div class="flex mt-4">
+        <div class="ml-auto">
+          <button aria-label="Previous slide" id="blog-hero-slider-previous" class="rounded-lg bg-base-100 p-1 text-base-600 shadow-xs hover:bg-base-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus:outline-base-400 cursor-pointer focus:outline-2 focus:outline-inset">
+            <ChevronLeft class="size-5" />
+          </button>
+          <button aria-label="Next slide" id="blog-hero-slider-next" class="rounded-lg bg-base-100 p-1 text-base-600 shadow-xs hover:bg-base-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus:outline-base-400 cursor-pointer focus:outline-2 focus:outline-inset">
+            <ChevronRight class="size-5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </Wrapper>
+</section>
+
+<section>
+  <Wrapper variant="standard" class="py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-0">
+      <div class="lg:pr-8 lg:col-span-3">
+        <div>
+          <Text>Latest stories</Text>
+          <div class="relative before:absolute after:absolute before:bg-base-950 after:bg-base-950/10 before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px pt-4 mt-2 flex flex-col gap-8 divide-y divide-base-200">
+            {
+              listPosts.map((post) => {
+                const url = "/blog/posts/" + post.id;
+                const title = post.data.title;
+                const description = post.data.description;
+                const image = post.data.image.url;
+                const tags = post.data.tags;
+                const pubDate = formatDate(post.data.pubDate);
+                const formattedAuthor = formatAuthorName(post.data.author);
+                const stats = readingTime(post.body);
+
+                return (
+                  <article class="relative grid grid-cols-1 md:grid-cols-3 gap-8 w-full group pb-8">
+                    <a href={url} title={title} class="absolute inset-0 z-10"> </a>
+                    <div class="flex flex-col h-full justify-between gap-2 md:col-span-2">
+                      <div>
+                        <Text tag="p" variant="textXS" class="text-accent-500 font-medium uppercase">
+                          <span>Article</span>
+                          <span> · </span>
+                          <span>{stats.text}</span>
+                        </Text>
+                        <Text tag="h3" variant="textLG" class="font-medium font-display text-base-900 group-hover:underline mt-2">
+                          <span>{title}</span>
+                        </Text>
+                        <Text tag="p" variant="textSM" class="mt-2 tracking-tight text-base-600">
+                          {description}
+                        </Text>
+                      </div>
+                      <div class="flex flex-wrap items-center gap-1 text-base-600">
+                        {tags.map((tag) => {
+                          const formattedTag = tag.replace(/-/g, " ");
+                          return (
+                            <Text tag="p" variant="textXS" title={tag} aria-label={tag} class="capitalize">
+                              {formattedTag}
+                            </Text>
+                          );
+                        })}
+                        <Text tag="p" variant="textXS">by {formattedAuthor}</Text>
+                        <Text tag="p" variant="textXS"><time datetime={pubDate}>on {pubDate}</time></Text>
+                      </div>
+                    </div>
+                    <Image
+                      src={image}
+                      alt={post.data.image.alt || title}
+                      width={800}
+                      height={800}
+                      loading="eager"
+                      decoding="async"
+                      class="object-cover w-full aspect-16/11 rounded-xl order-first"
+                    />
+                  </article>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div>
+      <div class="lg:pl-8 lg:relative lg:before:absolute lg:after:absolute lg:before:bg-base-950 lg:after:bg-base-950/10 lg:before:top-0 lg:before:left-0 lg:before:h-6 lg:before:w-px lg:after:top-8 lg:after:bottom-0 lg:after:left-0 after:w-px">
+        <div class="lg:sticky lg:top-10 lg:z-20">
+          <Text tag="h2" variant="textXS" class="text-base-900 uppercase font-medium">
+            Featured stories
+          </Text>
+          <div class="flex flex-col gap-4 border-b border-base-200 divide-y divide-base-200 mt-2 relative before:absolute after:absolute before:bg-base-950 after:bg-base-950/10 before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px pt-4">
+            {seriesPosts.map((post) => <BlogCard5 post={post} />)}
+          </div>
+          <AdvertAside />
+        </div>
+      </div>
+    </div>
+  </Wrapper>
+</section>
+
+<script type="module">
+  import KeenSlider from "https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/+esm";
+
+  const sliderElement = document.getElementById("blog-hero-slider");
+  const previousButton = document.getElementById("blog-hero-slider-previous");
+  const nextButton = document.getElementById("blog-hero-slider-next");
+
+  if (sliderElement && previousButton && nextButton) {
+    const autoplay = (slider) => {
+      let timeout;
+      let mouseOver = false;
+
+      function clearNextTimeout() {
+        clearTimeout(timeout);
+      }
+
+      function nextTimeout() {
+        clearTimeout(timeout);
+        if (mouseOver) return;
+        timeout = setTimeout(() => {
+          slider.next();
+        }, 3000);
+      }
+
+      slider.on("created", () => {
+        slider.container.addEventListener("mouseover", () => {
+          mouseOver = true;
+          clearNextTimeout();
+        });
+        slider.container.addEventListener("mouseout", () => {
+          mouseOver = false;
+          nextTimeout();
+        });
+        nextTimeout();
+      });
+      slider.on("dragStarted", clearNextTimeout);
+      slider.on("animationEnded", nextTimeout);
+      slider.on("updated", nextTimeout);
+    };
+
+    const slider = new KeenSlider(
+      sliderElement,
+      {
+        loop: true,
+        defaultAnimation: {
+          duration: 1500,
+        },
+        detailsChanged: (s) => {
+          s.slides.forEach((element, idx) => {
+            element.style.opacity = s.track.details.slides[idx].portion;
+          });
+        },
+        slides: {
+          origin: "center",
+          perView: 1,
+          spacing: 12,
+        },
+        breakpoints: {
+          "(min-width: 1024px)": {
+            slides: {
+              origin: "auto",
+              perView: 2.2,
+              spacing: 24,
+            },
+          },
+        },
+      },
+      [autoplay]
+    );
+
+    previousButton.addEventListener("click", () => slider.prev());
+    nextButton.addEventListener("click", () => slider.next());
+  }
+</script>
