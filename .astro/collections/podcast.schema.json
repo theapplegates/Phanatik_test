@@ -28,8 +28,7 @@
       "required": [
         "url",
         "alt"
-      ],
-      "additionalProperties": false
+      ]
     },
     "episodeNumber": {
       "type": "number"
@@ -69,6 +68,5 @@
     "author",
     "image",
     "tags"
-  ],
-  "additionalProperties": false
+  ]
 }

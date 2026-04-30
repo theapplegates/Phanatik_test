@@ -24,8 +24,7 @@
       "required": [
         "url",
         "alt"
-      ],
-      "additionalProperties": false
+      ]
     },
     "socials": {
       "type": "object",
@@ -42,8 +41,7 @@
         "email": {
           "type": "string"
         }
-      },
-      "additionalProperties": false
+      }
     },
     "$schema": {
       "type": "string"
@@ -52,6 +50,5 @@
   "required": [
     "name",
     "image"
-  ],
-  "additionalProperties": false
+  ]
 }

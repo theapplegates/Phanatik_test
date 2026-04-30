@@ -20,6 +20,5 @@
     "title",
     "pubDate",
     "description"
-  ],
-  "additionalProperties": false
+  ]
 }

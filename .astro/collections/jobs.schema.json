@@ -116,6 +116,5 @@
     "employmentStatus",
     "requirements",
     "responsibilities"
-  ],
-  "additionalProperties": false
+  ]
 }
