@@ -1,0 +1,13 @@
+---
+description: Pages — routing, layouts, and content-driven URLs for Phanatik
+globs: src/pages/**
+alwaysApply: false
+---
+
+# Pages (`src/pages/**`)
+
+- **Default chrome:** Most marketing/content routes wrap content in `BaseLayout` from `@/layouts/BaseLayout.astro` (Navigation, Footer, global scripts). Section layouts (`BlogLayout`, `PodcastLayout`, etc.) are composed inside those flows — follow how existing routes import them.
+- **Dynamic routes:** Detail pages use `[...slug].astro` and `getStaticPaths` with `params.slug` set to `entry.id` / `page.id` from `getCollection`. Collection names must match `src/content.config.ts` exports (`posts`, `podcast`, `legal`, `jobs`, `helpCenter`, `authors`).
+- **URL map (high level):** Blog articles → `/blog/posts/:slug`; podcast episodes → `/podcast/episodes/:slug`; legal → `/legal/:slug`; jobs → `/jobs/:slug`; help articles → `/helpcenter/:slug`; author profiles → `/authors/:slug`. Listing and filter pages live alongside these under `/blog/...` and `/podcast/...`.
+- **RSS:** `src/pages/rss.xml.js` defines `/rss.xml`. If changing how blog posts are sourced, keep this file consistent with where markdown actually lives (see `AGENTS.md` RSS note).
+- **System routes:** `src/pages/system/*` are internal design-system-style documentation pages; do not assume they ship to production unchanged.

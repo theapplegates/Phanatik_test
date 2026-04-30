@@ -1,0 +1,12 @@
+---
+description: Lexington Themes Phanatik — global conventions, imports, and minimal-change guardrails
+alwaysApply: true
+---
+
+# Phanatik (Lexington Themes) — global rules
+
+- **Scope:** This repo is the **Phanatik** Astro theme (`@lexington/phanatik`). Publisher resources follow the README link pattern (specs, docs, changelog, support on [lexingtonthemes.com](https://lexingtonthemes.com/)); do not invent Lexington URLs beyond those patterns.
+- **Imports:** Use the `@/` alias for `src/` (e.g. `@/layouts/BaseLayout.astro`, `@/components/global/Navigation.astro`). Match existing import ordering (fundations → scripts → feature components) where files already establish it.
+- **Spelling:** The shared UI kit folder is `src/components/fundations/` (intentional spelling). Never rename it; update paths that reference it if you touch imports.
+- **Changes:** Prefer minimal diffs aligned with existing patterns. Avoid drive-by refactors, new dependencies not in `package.json`, or schema changes without updating every consumer of that collection’s `data` / `frontmatter`.
+- **Stack facts:** Astro 6, Tailwind 4 via Vite plugin, MDX integration, `@lexingtonthemes/seo`, sitemap, RSS, content collections with Zod in `src/content.config.ts` — see root `AGENTS.md` for paths and collection keys (`posts`, `podcast`, `legal`, `jobs`, `helpCenter`, `authors`).

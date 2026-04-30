@@ -1,0 +1,12 @@
+---
+description: Astro site config + content collections — coordinate edits across astro.config.mjs and content.config.ts
+globs: astro.config.mjs,src/content.config.ts
+alwaysApply: false
+---
+
+# Config (`astro.config.mjs`, `src/content.config.ts`)
+
+- **`astro.config.mjs`:** Defines `site` (canonical URL for sitemap/RSS `context.site`), Vite + Tailwind plugin, and integrations (`@astrojs/sitemap`, `@astrojs/mdx`). Do not add integrations that are not dependencies in `package.json`. Changing `site` should be paired with SEO placeholders in `src/components/fundations/head/Seo.astro` when you go to production.
+- **`src/content.config.ts`:** Defines loaders and Zod schemas for all collections. Edits here are **breaking** for every `getCollection` call site and for TypeScript inference on `entry.data`.
+- **Coordination:** If you add a collection, add corresponding pages under `src/pages/`, a layout if needed, and navigation links only when the feature is required. If you change `markdown` / `mdx` behavior in `astro.config.mjs`, verify MDX-heavy content under `src/content/posts` and `src/content/podcast`.
+- **Shiki / drafts:** `astro.config.mjs` enables markdown drafts and Shiki theming; keep behavior consistent with how published vs draft content is filtered in page queries (if you add filtering later, update all listings).

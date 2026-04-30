@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "pubDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "description": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "alt"
+      ],
+      "additionalProperties": false
+    },
+    "episodeNumber": {
+      "type": "number"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "audioSrc": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "isFeatured": {
+      "type": "boolean"
+    },
+    "isGuest": {
+      "type": "boolean"
+    },
+    "isSeries": {
+      "type": "boolean"
+    },
+    "isLocked": {
+      "type": "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "pubDate",
+    "description",
+    "author",
+    "image",
+    "tags"
+  ],
+  "additionalProperties": false
+}

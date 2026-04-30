@@ -1,0 +1,14 @@
+---
+description: Content collections — Zod schemas, frontmatter, and image() for Phanatik
+globs: src/content/**
+alwaysApply: false
+---
+
+# Content (`src/content/**`)
+
+- **Schemas are the contract:** All fields come from `src/content.config.ts`. Collection folder on disk must match each loader `base` (e.g. `helpCenter` lives under `src/content/helpCenter/`).
+- **Do not relax or extend Zod** without updating layouts and pages that call `getCollection(...)` and read `entry.data` (e.g. `BlogLayout`, `PodcastLayout`, `JobsLayout`, `HelpCenterLayout`, `LegalLayout`, `AuthorsLayout`).
+- **`image()` fields** (`posts`, `podcast`, `authors`): keep `image.url` compatible with Astro’s `image()` helper — follow existing entries (e.g. `/src/images/blog/…`, `/src/images/podcast/…`, `/src/images/authors/…`). Do not switch to arbitrary external URLs in `url` unless you confirm the schema and consumers support it.
+- **Author linkage:** `posts` and `podcast` use `author` as a **string** slug; align with filenames under `src/content/authors/` (entry `id`).
+- **Templates:** Copy an existing file in the same folder (`src/content/posts/1.md`, `src/content/podcast/1.md`, `src/content/jobs/1.md`, `src/content/helpCenter/1.md`, `src/content/legal/terms.md`, `src/content/authors/samuel-ortiz.md`) rather than inventing new frontmatter keys.
+- **MDX:** Allowed only where the loader permits it (`posts`, `podcast` — `**/*.{md,mdx}`). Other collections are `**/*.md` only.
